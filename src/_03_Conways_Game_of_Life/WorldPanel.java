@@ -46,13 +46,27 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 	public void randomizeCells() {
 		// 4. Iterate through each cell and randomly set each
 		// cell's isAlive memeber to true of false
-
+		for(int i = 0; i < cells.length; i++) {
+			for(int j = 0; j < cells[i].length; j++) {
+				Random ran = new Random();
+				int b = ran.nextInt(10);
+				if(b%2==0) {
+					cells[i][j].isAlive = true;
+				} else {
+					cells[i][j].isAlive = false;
+				}
+			}
+		}
 		repaint();
 	}
 
 	public void clearCells() {
 		// 5. Iterate through the cells and set them all to dead.
-
+		for(int i = 0; i < cells.length; i++) {
+			for(int j = 0; j < cells[i].length; j++) {
+				cells[i][j].isAlive = false;
+			}
+		}
 		repaint();
 	}
 
@@ -71,7 +85,11 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 	@Override
 	public void paintComponent(Graphics g) {
 		// 6. Iterate through the cells and draw them all
-
+		for(int i = 0; i < cells.length; i++) {
+			for(int j = 0; j < cells[i].length; j++) {
+				cells[i][j].draw(g);
+			}
+		}
 		// draws grid
 		g.setColor(Color.BLACK);
 		g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
