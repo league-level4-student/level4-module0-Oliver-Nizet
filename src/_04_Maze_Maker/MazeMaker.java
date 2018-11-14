@@ -35,81 +35,75 @@ public class MazeMaker {
 		// A. mark cell as visited
 		currentCell.hasBeenVisited();
 		// B. check for unvisited neighbors using the cell
-		boolean up = false;
-		boolean down = false;
-		boolean left = false;
-		boolean right = false;
-		if (maze.getCell(currentCell.getX(), currentCell.getY() - 1).hasBeenVisited()) {
-			up = true;
-		}
-		if (maze.getCell(currentCell.getX(), currentCell.getY() + 1).hasBeenVisited()) {
-			down = true;
-		}
-		if (maze.getCell(currentCell.getX() - 1, currentCell.getY()).hasBeenVisited()) {
-			left = true;
-		}
-		if (maze.getCell(currentCell.getX() + 1, currentCell.getY()).hasBeenVisited()) {
-			right = true;
-		}
+
 		// C. if has unvisited neighbors,
-		if (up || down || left || right) {
-			boolean done = false;
-			while (!done) {
-				// C1. select one at random.
-				Random r = new Random();
-				int ran = r.nextInt(4);
-				if (ran == 0) {
-					if (up) {
-						uncheckedCells.push(maze.getCell(currentCell.getX(), currentCell.getY() - 1));
-					}
-				}
-				if (ran == 1) {
-					if (down) {
-						uncheckedCells.push(maze.getCell(currentCell.getX(), currentCell.getY() + 1));
-					}
-				}
-				if (ran == 2) {
-					if (left) {
-						uncheckedCells.push(maze.getCell(currentCell.getX() - 1, currentCell.getY()));
-					}
-				}
-				if (ran == 3) {
-					if (right) {
-						uncheckedCells.push(maze.getCell(currentCell.getX() + 1, currentCell.getY()));
-					}
-				}
-				// C2. push it to the stack
-
-				// C3. remove the wall between the two cells
-
-				// C4. make the new cell the current cell and mark it as visited
-
-				// C5. call the selectNextPath method with the current cell
-			}
+		if (!getUnvisitedNeighbors(currentCell).isEmpty()) {
+			// C1. select one at random.
+			Random r = new Random();
+			int ran = r.nextInt(getUnvisitedNeighbors(currentCell).size());
+			// C2. push it to the stack
+			uncheckedCells.push(getUnvisitedNeighbors(currentCell).get(ran));
+			// C3. remove the wall between the two cells
+			removeWalls(currentCell, getUnvisitedNeighbors(currentCell).get(ran));
+			// C4. make the new cell the current cell and mark it as visited
+			currentCell = getUnvisitedNeighbors(currentCell).get(ran);
+			currentCell.hasBeenVisited();
+			// C5. call the selectNextPath method with the current cell
+			selectNextPath(currentCell);
 		}
 		// D. if all neighbors are visited
-
-		// D1. if the stack is not empty
-
-		// D1a. pop a cell from the stack
-
-		// D1b. make that the current cell
-
-		// D1c. call the selectNextPath method with the current cell
-
+		if (getUnvisitedNeighbors(currentCell).isEmpty()) {
+			// D1. if the stack is not empty
+			if (!uncheckedCells.isEmpty()) {
+				// D1a. pop a cell from the stack
+				// D1b. make that the current cell
+				currentCell = uncheckedCells.pop();
+				// D1c. call the selectNextPath method with the current cell
+				selectNextPath(currentCell);
+			}
+		}
 	}
 
 	// 7. Complete the remove walls method.
 	// This method will check if c1 and c2 are adjacent.
 	// If they are, the walls between them are removed.
 	private static void removeWalls(Cell c1, Cell c2) {
-
+		if (c1.getX() == c2.getX()) {
+			if (c1.getY() > c2.getY()) {
+				c1.setNorthWall(false);
+				c2.setSouthWall(false);
+			} else {
+				c1.setSouthWall(false);
+				c2.setNorthWall(false);
+			}
+		} else {
+			if (c1.getX() > c2.getX()) {
+				c1.setEastWall(false);
+				c2.setWestWall(false);
+			} else {
+				c1.setWestWall(false);
+				c2.setEastWall(false);
+			}
+		}
 	}
 
 	// 8. Complete the getUnvisitedNeighbors method
 	// Any unvisited neighbor of the passed in cell gets added
 	// to the ArrayList
 	private static ArrayList<Cell> getUnvisitedNeighbors(Cell c) {
-		return null;
+		ArrayList<Cell> cells = new ArrayList<Cell>();
+		if (c.getY() > 0 && maze.getCell(c.getX(), c.getY() - 1).hasBeenVisited()) {
+			cells.add(maze.getCell(c.getX(), c.getY() - 1));
+		}
+		if (c.getY() < width && maze.getCell(c.getX(), c.getY() + 1).hasBeenVisited()) {
+			cells.add(maze.getCell(c.getX(), c.getY() + 1));
+		}
+		if (c.getX() > 0 && maze.getCell(c.getX() - 1, c.getY()).hasBeenVisited()) {
+			cells.add(maze.getCell(c.getX() - 1, c.getY()));
+		}
+		if (c.getX() < height && maze.getCell(c.getX() + 1, c.getY()).hasBeenVisited()) {
+			cells.add(maze.getCell(c.getX() + 1, c.getY()));
+		}
+		return cells;
 	}
 }
