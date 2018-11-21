@@ -92,16 +92,16 @@ public class MazeMaker {
 	// to the ArrayList
 	private static ArrayList<Cell> getUnvisitedNeighbors(Cell c) {
 		ArrayList<Cell> cells = new ArrayList<Cell>();
-		if (c.getY() > 0 && maze.getCell(c.getX(), c.getY() - 1).hasBeenVisited()) {
+		if (c.getY() > 0 && !maze.getCell(c.getX(), c.getY() - 1).hasBeenVisited()) {
 			cells.add(maze.getCell(c.getX(), c.getY() - 1));
 		}
-		if (c.getY() < width && maze.getCell(c.getX(), c.getY() + 1).hasBeenVisited()) {
+		if (c.getY() < width && !maze.getCell(c.getX(), c.getY() + 1).hasBeenVisited()) {
 			cells.add(maze.getCell(c.getX(), c.getY() + 1));
 		}
-		if (c.getX() > 0 && maze.getCell(c.getX() - 1, c.getY()).hasBeenVisited()) {
+		if (c.getX() > 0 && !maze.getCell(c.getX() - 1, c.getY()).hasBeenVisited()) {
 			cells.add(maze.getCell(c.getX() - 1, c.getY()));
 		}
-		if (c.getX() < height && maze.getCell(c.getX() + 1, c.getY()).hasBeenVisited()) {
+		if (c.getX() < height && !maze.getCell(c.getX() + 1, c.getY()).hasBeenVisited()) {
 			cells.add(maze.getCell(c.getX() + 1, c.getY()));
 		}
 		return cells;
